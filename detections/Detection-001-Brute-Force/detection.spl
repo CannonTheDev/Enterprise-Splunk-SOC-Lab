@@ -1,0 +1,6 @@
+source="WinEventLog:Security" EventCode=4625
+| eval FailedUser=mvindex(Account_Name,1)
+| where FailedUser!="-"
+| stats count by host Source_Network_Address FailedUser
+| where count>=5
+| sort -count
