@@ -1,0 +1,21 @@
+source="WinEventLog:Security" EventCode=4688
+| rex field=Message "New Process Name:\s+(?<Process>[^\r\n]+)"
+| rex field=Message "Creator Process Name:\s+(?<Parent>[^\r\n]+)"
+| rex field=Message "Account Name:\s+(?<User>[^\r\n]+)"
+| rex field=Message "Process Command Line:\s+(?<CommandLine>.*?)(?:\r?\n\r?\n|\r?\nToken Elevation Type:)"
+| search Process="*powershell.exe"
+| where NOT like(Process,"%Splunk%")
+| where NOT like(Parent,"%Splunk%")
+| eval DetectionReason=case(
+match(CommandLine,"(?i)-ExecutionPolicy\s+Bypass"),"Execution Policy Bypass",
+match(CommandLine,"(?i)-EncodedCommand"),"Encoded PowerShell",
+match(CommandLine,"(?i)\bIEX\b|Invoke-Expression"),"Invoke-Expression",
+match(CommandLine,"(?i)DownloadString"),"DownloadString",
+match(CommandLine,"(?i)Invoke-WebRequest"),"Invoke-WebRequest",
+match(CommandLine,"(?i)-WindowStyle\s+Hidden"),"Hidden PowerShell",
+match(CommandLine,"(?i)Get-Process"),"PowerShell Test Command",
+true(),"Other PowerShell"
+)
+| where isnotnull(DetectionReason)
+| table _time host User Process Parent CommandLine DetectionReason
+| sort -_time
