@@ -1,0 +1,5 @@
+source="WinEventLog:Security" EventCode=4740
+| rex field=Message "Account That Was Locked Out:\r?\n\s+Security ID:.*?\r?\n\s+Account Name:\s+(?<LockedAccount>[^\r\n]+)"
+| rex field=Message "Caller Computer Name:\s+(?<CallerComputer>[^\r\n]+)"
+| table _time host LockedAccount CallerComputer
+| sort -_time
