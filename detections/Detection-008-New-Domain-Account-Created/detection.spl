@@ -1,0 +1,5 @@
+source="WinEventLog:Security" EventCode=4720
+| rex field=Message "Account Name:\s+(?<AccountName>[^\r\n]+)"
+| rex field=Message "New Account:\s+Security ID:[^\r\n]+\s+Account Name:\s+(?<NewAccountName>[^\r\n]+)"
+| table _time host AccountName NewAccountName
+| sort -_time
