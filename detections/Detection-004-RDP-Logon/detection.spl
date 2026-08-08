@@ -1,0 +1,7 @@
+source="WinEventLog:Security" EventCode=4624
+| rex field=Message "Logon Type:\s+(?<LogonType>\d+)"
+| rex field=Message "Account Name:\s+(?<AccountName>[^\r\n]+)"
+| rex field=Message "Source Network Address:\s+(?<SourceIP>[^\r\n]+)"
+| search LogonType=10
+| table _time host AccountName SourceIP LogonType
+| sort -_time
