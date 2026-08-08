@@ -1,0 +1,2 @@
+"_time",host,"Service_Name","Service_File_Name","Service_Type","Service_Start_Type","Service_Account"
+"2026-08-07T19:37:52.788-0500","WIN-11","SOC-Test-Service","C:\Windows\System32\cmd.exe /c exit","user mode service","demand start",LocalSystem
