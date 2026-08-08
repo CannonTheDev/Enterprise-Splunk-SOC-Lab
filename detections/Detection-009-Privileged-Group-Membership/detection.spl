@@ -1,0 +1,7 @@
+source="WinEventLog:Security" EventCode=4728
+| rex field=Message "Subject:\s+Security ID:[^\r\n]+\s+Account Name:\s+(?<AddedBy>[^\r\n]+)"
+| rex field=Message "Member:\s+Security ID:[^\r\n]+\s+Account Name:\s+(?<MemberName>[^\r\n]+)"
+| rex field=Message "Group:\s+Security ID:[^\r\n]+\s+Group Name:\s+(?<GroupName>[^\r\n]+)"
+| search GroupName="Domain Admins" OR GroupName="Enterprise Admins" OR GroupName="Schema Admins" OR GroupName="Group Policy Creator Owners"
+| table _time host AddedBy MemberName GroupName
+| sort -_time
