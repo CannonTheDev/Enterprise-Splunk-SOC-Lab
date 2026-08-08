@@ -1,0 +1,7 @@
+source="WinEventLog:Security" EventCode=4698
+| rex field=Message "Account Name:\s+(?<AccountName>[^\r\n]+)"
+| rex field=Message "Task Name:\s+(?<TaskName>[^\r\n]+)"
+| rex field=Message "<Command>(?<Command>[^<]+)</Command>"
+| rex field=Message "<Arguments>(?<Arguments>[^<]*)</Arguments>"
+| table _time host AccountName TaskName Command Arguments
+| sort -_time
