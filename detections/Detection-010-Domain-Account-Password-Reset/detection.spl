@@ -1,0 +1,5 @@
+source="WinEventLog:Security" EventCode=4724
+| rex field=Message "Subject:\s+Security ID:[^\r\n]+\s+Account Name:\s+(?<ResetBy>[^\r\n]+)"
+| rex field=Message "Target Account:\s+Security ID:[^\r\n]+\s+Account Name:\s+(?<TargetAccount>[^\r\n]+)"
+| table _time host ResetBy TargetAccount
+| sort -_time
