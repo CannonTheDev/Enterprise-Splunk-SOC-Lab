@@ -1,0 +1,2 @@
+"_time",host,AccountName,TaskName,Command,Arguments
+"2026-08-07T20:34:48.738-0500","WIN-11",soctest,"\SOC-Test-Task","cmd.exe","/c exit"
