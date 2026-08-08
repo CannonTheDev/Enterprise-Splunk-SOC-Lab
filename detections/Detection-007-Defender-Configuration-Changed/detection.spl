@@ -1,0 +1,5 @@
+source="XmlWinEventLog:Microsoft-Windows-Windows Defender/Operational" EventCode=5007
+| rex field=_raw "Old Value[^>]*>(?<OldValue>[^<]*)"
+| rex field=_raw "New Value[^>]*>(?<NewValue>[^<]*)"
+| table _time host OldValue NewValue
+| sort -_time
